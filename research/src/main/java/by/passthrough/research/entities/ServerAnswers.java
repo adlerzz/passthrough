@@ -3,12 +3,8 @@ package by.passthrough.research.entities;
 public enum ServerAnswers {
     good,
     bad,
-    boring,
-    happy,
-    offensive,
+    bored,
     excited,
-    angry,
-    nice,
     frightened,
     surprised
 }
