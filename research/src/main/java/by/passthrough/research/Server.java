@@ -29,20 +29,22 @@ public class Server {
             System.out.println("Output stream created");
 
             while (!clientSocket.isClosed()) {
+                boolean connectionFlag = true;
                 Thread.sleep(5000);
                 String messageFromClient = dataFromClient.readUTF().toLowerCase();
                 System.out.println("messageFromClient= " + messageFromClient);
                 if ("see you".equalsIgnoreCase(messageFromClient)) {
-
                     System.out.println("Client initialize connections suicide ...");
+                    connectionFlag=false;
                     dataFromCurrentServer.writeUTF("Connection kiled by server!");
-                    dataFromCurrentServer.writeBoolean(false);
+                    dataFromCurrentServer.writeBoolean(connectionFlag);
                     dataFromCurrentServer.flush();
                     break;
                 }
                 String serverAnswer = getAnswerToClient(messageFromClient);
                 System.out.println("Server Wrote message= " + serverAnswer +" to client.");
                 dataFromCurrentServer.writeUTF(serverAnswer);
+                dataFromCurrentServer.writeBoolean(connectionFlag);
                 dataFromCurrentServer.flush();
 
             }

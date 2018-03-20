@@ -24,8 +24,13 @@ public class Client {
                     Thread.sleep(1000);
                     dataToServer.flush();
                     String messageFromClient = dataFromServer.readUTF();
+
                     System.out.println(messageFromClient);
-                    if (!dataFromServer.readBoolean()) break;
+                    if (!dataFromServer.readBoolean()){
+                        System.out.println("Client disconnected");
+                        break;
+                    }
+
                 }
                 Thread.sleep(2000);
 
