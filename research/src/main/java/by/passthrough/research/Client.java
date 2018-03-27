@@ -10,7 +10,7 @@ public class Client {
     private static Logger log = Logger.createLogger(Client.class, true);
     private static int PORT = 5450;
 
-    public static void main(String[] args) throws InterruptedException, IOException {
+    public static void main(String[] args) throws IOException {
         try (Socket connectedSocket = new Socket("localhost",PORT);
             BufferedReader clientData = new BufferedReader(new InputStreamReader(System.in));
             DataOutputStream dataToServer = new DataOutputStream(connectedSocket.getOutputStream());
