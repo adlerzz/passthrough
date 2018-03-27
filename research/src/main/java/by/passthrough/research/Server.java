@@ -24,7 +24,7 @@ public class Server {
 
     private static Logger log = Logger.createLogger(Server.class, true);
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException{
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             log.info("Waiting for connection from client...");
             Socket clientSocket = serverSocket.accept();

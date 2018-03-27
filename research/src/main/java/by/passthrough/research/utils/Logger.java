@@ -30,6 +30,7 @@ public class Logger {
         String deep[] = this.inClass.getPackage().getName().split("\\.");
 
         String methodName = (new Exception()).getStackTrace()[2].getMethodName();
+        String objString = object != null ? object.toString(): "";
 
         System.out.printf("[%1$tF %1$tT] %2$s <%3$s.%4$s#%5$s> - %6$s%n",
                 new Date(),
@@ -37,7 +38,7 @@ public class Logger {
                 deep[deep.length - 1],
                 this.inClass.getSimpleName(),
                 methodName,
-                object.toString()
+                objString
         );
     }
 
@@ -78,7 +79,6 @@ public class Logger {
     }
 
     public void error(Object object){
-
         this.output("ERROR", object);
     }
 
