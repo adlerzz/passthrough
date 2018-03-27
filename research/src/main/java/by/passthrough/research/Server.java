@@ -1,6 +1,7 @@
 package by.passthrough.research;
 
 import by.passthrough.research.entities.ServerAnswers;
+import by.passthrough.research.utils.Logger;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -13,43 +14,48 @@ import java.util.List;
 import java.util.Random;
 
 public class Server {
+
+    private static int PORT = 5450;
+
     private static final List<ServerAnswers> VALUES =
             Collections.unmodifiableList(Arrays.asList(ServerAnswers.values()));
     private static final int SIZE = VALUES.size();
     private static final Random RANDOM = new Random();
 
-    public static void main(String[] args) throws IOException, InterruptedException {
-        try (ServerSocket serverSocket = new ServerSocket(5450)) {
-            System.out.println("Waiting for connection from client...");
-            Socket clientSocket = serverSocket.accept();
-            System.out.println("Connection approved");
-            DataInputStream dataFromClient = new DataInputStream(clientSocket.getInputStream());
-            System.out.println("Input stream created");
-            DataOutputStream dataFromCurrentServer = new DataOutputStream(clientSocket.getOutputStream());
-            System.out.println("Output stream created");
+    private static Logger log = Logger.createLogger(Server.class, true);
 
+    public static void main(String[] args) throws IOException, InterruptedException {
+        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
+            log.info("Waiting for connection from client...");
+            Socket clientSocket = serverSocket.accept();
+            log.info("Connection approved");
+            DataInputStream dataFromClient = new DataInputStream(clientSocket.getInputStream());
+            log.info("Input stream created");
+            DataOutputStream dataFromCurrentServer = new DataOutputStream(clientSocket.getOutputStream());
+            log.info("Output stream created");
+
+            boolean connectionFlag = true;
             while (!clientSocket.isClosed()) {
-                boolean connectionFlag = true;
-                Thread.sleep(5000);
+
                 String messageFromClient = dataFromClient.readUTF().toLowerCase();
-                System.out.println("messageFromClient= " + messageFromClient);
+                log.info("messageFromClient= " + messageFromClient);
                 if ("see you".equalsIgnoreCase(messageFromClient)) {
-                    System.out.println("Client initialize connections suicide ...");
-                    connectionFlag=false;
+                    log.info("Client initialize connections suicide ...");
+                    connectionFlag = false;
                     dataFromCurrentServer.writeUTF("Connection kiled by server!");
                     dataFromCurrentServer.writeBoolean(connectionFlag);
                     dataFromCurrentServer.flush();
                     break;
                 }
                 String serverAnswer = getAnswerToClient(messageFromClient);
-                System.out.println("Server Wrote message= " + serverAnswer +" to client.");
+                log.info("Server Wrote message= " + serverAnswer +" to client.");
                 dataFromCurrentServer.writeUTF(serverAnswer);
                 dataFromCurrentServer.writeBoolean(connectionFlag);
                 dataFromCurrentServer.flush();
 
             }
-            System.out.println("Client disconnected");
-            System.out.println("Closing connections & channels.");
+            log.info("Client disconnected");
+            log.info("Closing connections & channels.");
             dataFromClient.close();
             dataFromCurrentServer.close();
 
@@ -64,7 +70,7 @@ public class Server {
 
     private static String getAnswerToClient(String messageFromClient) {
         String serverAnswer;
-        System.out.println("Answer begin");
+        log.debug("Answer begin");
         switch (messageFromClient) {
             case "hello":
                 serverAnswer = "Hi there!";
@@ -78,14 +84,13 @@ public class Server {
             default:
                 serverAnswer = "Please, read carefully instruction above, stupid leather bastard";
         }
-        System.out.println("Answer finish= " + serverAnswer);
+        log.debug("Answer finish= " + serverAnswer);
         return serverAnswer;
     }
 
-    private static void drawWelcomeWords(DataOutputStream dataFromCurrentServer) {
-        System.out.println("Trying to biuild welcome message to server...");
-        StringBuilder builder = new StringBuilder();
-        String welcomeMessage = builder.append("============================\n")
+    private static String drawWelcomeWords() {
+        log.info("Trying to build welcome message to server...");
+        return new StringBuilder().append("============================\n")
                 .append("Welcome to Chat, username!\n")
                 .append("============================\n")
                 .append("Please use next commands for communication with server\n")
@@ -95,11 +100,5 @@ public class Server {
                 .append("4 - see you\n")
                 .append("============================")
                 .toString();
-        try {
-            dataFromCurrentServer.writeUTF(welcomeMessage);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
