@@ -1,71 +1,73 @@
 package by.passthrough.research;
 
+import by.passthrough.research.engine.ai.AnswerSolver;
+import by.passthrough.research.engine.server.ConnectionsManager;
+import by.passthrough.research.engine.server.HostThread;
 import by.passthrough.research.entities.ServerAnswers;
 import by.passthrough.research.utils.Logger;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 public class Server {
-
     private static int PORT = 5450;
-
-    private static final List<ServerAnswers> VALUES =
-            Collections.unmodifiableList(Arrays.asList(ServerAnswers.values()));
-    private static final int SIZE = VALUES.size();
-    private static final Random RANDOM = new Random();
-
     private static Logger log = Logger.createLogger(Server.class, true);
 
-    public static void main(String[] args) throws IOException{
-        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
-            log.info("Waiting for connection from client...");
-            Socket clientSocket = serverSocket.accept();
-            log.info("Connection approved");
-            DataInputStream dataFromClient = new DataInputStream(clientSocket.getInputStream());
-            log.info("Input stream created");
-            DataOutputStream dataFromCurrentServer = new DataOutputStream(clientSocket.getOutputStream());
-            log.info("Output stream created");
+//    public static void main(String[] args) throws IOException{
+//        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
+//            log.info("Waiting for connection from client...");
+//            Socket clientSocket = serverSocket.accept();
+//            log.info("Connection approved");
+//            DataInputStream dataFromClient = new DataInputStream(clientSocket.getInputStream());
+//            log.info("Input stream created");
+//            DataOutputStream dataFromCurrentServer = new DataOutputStream(clientSocket.getOutputStream());
+//            log.info("Output stream created");
+//
+//            boolean connectionFlag = true;
+//            while (!clientSocket.isClosed()) {
+//
+//                String messageFromClient = dataFromClient.readUTF().toLowerCase();
+//                log.info("messageFromClient= " + messageFromClient);
+//                if ("see you".equalsIgnoreCase(messageFromClient)) {
+//                    log.info("Client initialize connections suicide ...");
+//                    connectionFlag = false;
+//                    dataFromCurrentServer.writeUTF("Connection kiled by server!");
+//                    dataFromCurrentServer.writeBoolean(connectionFlag);
+//                    dataFromCurrentServer.flush();
+//                    break;
+//                }
+//                String serverAnswer = getAnswerToClient(messageFromClient);
+//                log.info("Server Wrote message= " + serverAnswer +" to client.");
+//                dataFromCurrentServer.writeUTF(serverAnswer);
+//                dataFromCurrentServer.writeBoolean(connectionFlag);
+//                dataFromCurrentServer.flush();
+//
+//            }
+//            log.info("Client disconnected");
+//            log.info("Closing connections & channels.");
+//            dataFromClient.close();
+//            dataFromCurrentServer.close();
+//
+//        }
+//    }
 
-            boolean connectionFlag = true;
-            while (!clientSocket.isClosed()) {
+    public static void main(String[] args){
 
-                String messageFromClient = dataFromClient.readUTF().toLowerCase();
-                log.info("messageFromClient= " + messageFromClient);
-                if ("see you".equalsIgnoreCase(messageFromClient)) {
-                    log.info("Client initialize connections suicide ...");
-                    connectionFlag = false;
-                    dataFromCurrentServer.writeUTF("Connection kiled by server!");
-                    dataFromCurrentServer.writeBoolean(connectionFlag);
-                    dataFromCurrentServer.flush();
-                    break;
-                }
-                String serverAnswer = getAnswerToClient(messageFromClient);
-                log.info("Server Wrote message= " + serverAnswer +" to client.");
-                dataFromCurrentServer.writeUTF(serverAnswer);
-                dataFromCurrentServer.writeBoolean(connectionFlag);
-                dataFromCurrentServer.flush();
+        try(ConnectionsManager cm = new ConnectionsManager(PORT)){
 
-            }
-            log.info("Client disconnected");
-            log.info("Closing connections & channels.");
-            dataFromClient.close();
-            dataFromCurrentServer.close();
+            cm.listen(CustomHostThread.class);
 
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     private static String getRandomAnswer() {
-        ServerAnswers value = VALUES.get(RANDOM.nextInt(SIZE));
-        String serverAnswer = "I feel " + value;
-        return serverAnswer;
+        int randIndex = (new Random()).nextInt(ServerAnswers.values().length);
+        ServerAnswers value = ServerAnswers.values()[randIndex];
+        return "I feel " + value;
     }
 
     private static String getAnswerToClient(String messageFromClient) {

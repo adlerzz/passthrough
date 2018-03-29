@@ -1,11 +1,10 @@
 package by.passthrough.research.utils;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.stream.Collectors;
 
-/**
- * Created by alst0816 on 21.03.2018
- */
 public class Logger {
 
     private Class inClass;
@@ -79,7 +78,11 @@ public class Logger {
     }
 
     public void error(Object object){
-        this.output("ERROR", object);
+        if(object instanceof Exception) {
+            Exception ex = (Exception) object;
+
+            this.output("ERROR", ex.getLocalizedMessage() + "\n" + String.join("\n", Arrays.stream(ex.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.toList())) );
+        }
     }
 
     public void println(Object object){
