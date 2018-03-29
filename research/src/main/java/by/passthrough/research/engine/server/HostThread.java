@@ -1,10 +1,7 @@
 package by.passthrough.research.engine.server;
 
-import by.passthrough.research.engine.ai.AnswerSolver;
 import by.passthrough.research.engine.transceivers.HostTransceiver;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.io.Closeable;
 import java.io.IOException;

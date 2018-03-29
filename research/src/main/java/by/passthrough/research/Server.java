@@ -1,14 +1,9 @@
 package by.passthrough.research;
 
-import by.passthrough.research.engine.ai.AnswerSolver;
 import by.passthrough.research.engine.server.ConnectionsManager;
-import by.passthrough.research.engine.server.HostThread;
 import by.passthrough.research.entities.ServerAnswers;
 import by.passthrough.research.utils.Logger;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
 
-import java.io.IOException;
 import java.util.Random;
 
 public class Server {
