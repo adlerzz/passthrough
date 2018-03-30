@@ -11,9 +11,6 @@ import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Created by alst0816 on 28.03.2018
- */
 public class ConnectionsManager implements Closeable {
     private static Logger log = Logger.createLogger(ConnectionsManager.class, true);
     private ExecutorService pool;

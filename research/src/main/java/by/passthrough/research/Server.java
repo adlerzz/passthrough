@@ -10,48 +10,10 @@ public class Server {
     private static int PORT = 5450;
     private static Logger log = Logger.createLogger(Server.class, true);
 
-//    public static void main(String[] args) throws IOException{
-//        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
-//            log.info("Waiting for connection from client...");
-//            Socket clientSocket = serverSocket.accept();
-//            log.info("Connection approved");
-//            DataInputStream dataFromClient = new DataInputStream(clientSocket.getInputStream());
-//            log.info("Input stream created");
-//            DataOutputStream dataFromCurrentServer = new DataOutputStream(clientSocket.getOutputStream());
-//            log.info("Output stream created");
-//
-//            boolean connectionFlag = true;
-//            while (!clientSocket.isClosed()) {
-//
-//                String messageFromClient = dataFromClient.readUTF().toLowerCase();
-//                log.info("messageFromClient= " + messageFromClient);
-//                if ("see you".equalsIgnoreCase(messageFromClient)) {
-//                    log.info("Client initialize connections suicide ...");
-//                    connectionFlag = false;
-//                    dataFromCurrentServer.writeUTF("Connection kiled by server!");
-//                    dataFromCurrentServer.writeBoolean(connectionFlag);
-//                    dataFromCurrentServer.flush();
-//                    break;
-//                }
-//                String serverAnswer = getAnswerToClient(messageFromClient);
-//                log.info("Server Wrote message= " + serverAnswer +" to client.");
-//                dataFromCurrentServer.writeUTF(serverAnswer);
-//                dataFromCurrentServer.writeBoolean(connectionFlag);
-//                dataFromCurrentServer.flush();
-//
-//            }
-//            log.info("Client disconnected");
-//            log.info("Closing connections & channels.");
-//            dataFromClient.close();
-//            dataFromCurrentServer.close();
-//
-//        }
-//    }
-
     public static void main(String[] args){
 
         try(ConnectionsManager cm = new ConnectionsManager(PORT)){
-
+            log.info("Server started");
             cm.listen(CustomHostThread.class);
 
         } catch (Exception e) {

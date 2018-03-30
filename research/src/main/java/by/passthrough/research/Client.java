@@ -1,8 +1,13 @@
 package by.passthrough.research;
 
 import by.passthrough.research.engine.transceivers.PeerTransceiver;
+import by.passthrough.research.entities.messages.AuthMessage;
+import by.passthrough.research.entities.messages.ChatMessage;
+import by.passthrough.research.entities.messages.Message;
+import by.passthrough.research.entities.messages.MessageType;
+import by.passthrough.research.entities.messages.RequestMessage;
+import by.passthrough.research.entities.messages.SystemMessage;
 import by.passthrough.research.utils.Logger;
-import org.json.simple.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,62 +17,48 @@ import java.util.Date;
 public class Client {
     private static Logger log = Logger.createLogger(Client.class, true);
     private static int PORT = 5450;
-    private static String STOP_WORD = "stop";
-
-//    public static void main(String[] args) throws IOException {
-//        try (Socket connectedSocket = new Socket("localhost",PORT);
-//            BufferedReader clientData = new BufferedReader(new InputStreamReader(System.in));
-//            DataOutputStream dataToServer = new DataOutputStream(connectedSocket.getOutputStream());
-//            DataInputStream dataFromServer = new DataInputStream(connectedSocket.getInputStream()))
-//        {
-//            log.info("Client connected to socket.");
-//            log.debug("Client writing channel = dataToServer & reading channel = dataFromServer initialized.");
-//            while (!connectedSocket.isOutputShutdown()) {
-//                if (clientData.ready()) {
-//                    log.info("Client start writing in channel...");
-//                    String clientMessage = clientData.readLine();
-//                    dataToServer.writeUTF(clientMessage);
-//                    dataToServer.flush();
-//                    String messageFromClient = dataFromServer.readUTF();
-//
-//                    log.info(messageFromClient);
-//                    if (!dataFromServer.readBoolean()){
-//                        log.info("Client disconnected");
-//                        break;
-//                    }
-//                }
-//
-//            }
-//            log.info("Server killed connection");
-//            if (dataFromServer.read() > -1) {
-//                log.info("Reading ...");
-//                String serverMessage = dataFromServer.readUTF();
-//                log.info(serverMessage);
-//            }
-//        }
-//    }
+    private static String HOST = "10.229.90.186";
 
     public static void main(String[] args){
 
-        try(PeerTransceiver peer = new PeerTransceiver("10.229.90.186", PORT)) {
+        try(PeerTransceiver peer = new PeerTransceiver(HOST, PORT)) {
             BufferedReader reader = new BufferedReader( new InputStreamReader(System.in));
 
             String id = String.valueOf( (new Date()).getTime() );
 
-            JSONObject firstMessage = new JSONObject();
-            firstMessage.put("stopWord", STOP_WORD);
-            firstMessage.put("id", id);
+            AuthMessage authMessage = new AuthMessage();
+            authMessage.setName(id);
 
             peer.open();
-            peer.send(firstMessage.toString());
+            peer.send(authMessage.toJSONString());
 
             Thread inputThread = new Thread(){
                 @Override
                 public void run(){
                     while (!this.isInterrupted()){
                         try {
-                            String msg = reader.readLine();
-                            peer.send(msg);
+                            String[] msg = reader.readLine().split(" ", 2);
+                            String firstWord = msg[0];
+                            String secondWord = null;
+                            if(msg.length > 1){
+                                secondWord = msg[1];
+                            }
+                            switch (firstWord) {
+                                case "allPeers":
+                                    RequestMessage requestMessage = new RequestMessage(String.valueOf((new Date().getTime())), "peers");
+                                    peer.send(requestMessage.toJSONString());
+                                break;
+
+                                case "test":
+                                    ChatMessage chatMessage = new ChatMessage();
+                                    chatMessage.setDest(secondWord);
+                                    chatMessage.setPayload("test message");
+                                    peer.send(chatMessage.toJSONString());
+                                break;
+
+                                default:
+                                    peer.send(secondWord + " " + firstWord);
+                            }
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -81,10 +72,21 @@ public class Client {
             boolean end = false;
             do{
                 recv = peer.receive();
-                if(STOP_WORD.equals(recv)){
-                    end = true;
-                } else {
-                    log.debug("received: \"" + recv + "\"");
+                Message msg = Message.parseFromJSON(recv);
+
+                MessageType messageType = msg.getMessageType();
+                switch (messageType){
+                    case SYSTEM:
+                        SystemMessage systemMessage = (SystemMessage)msg;
+                        if(SystemMessage.STOP.getPayload().equals(systemMessage.getPayload())){
+                            end = true;
+                        }
+                    break;
+
+                    case CHAT:
+                        ChatMessage chatMessage = (ChatMessage)msg;
+                        System.out.println(chatMessage.getPayload());
+                    break;
                 }
             } while (!end);
             inputThread.interrupt();

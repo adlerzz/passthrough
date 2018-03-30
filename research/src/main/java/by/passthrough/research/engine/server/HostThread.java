@@ -10,12 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-/**
- * Created by alst0816 on 28.03.2018
- */
 public abstract class HostThread implements Callable<Void>, Closeable {
     private HostTransceiver host;
-    protected boolean stop;
+    protected volatile boolean stop;
     private Socket clientSocket;
     private Map<String, Object> data;
     protected JSONParser jsonParser;
