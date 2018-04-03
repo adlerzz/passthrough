@@ -37,13 +37,13 @@ public class CustomHostThread extends HostThread {
                 case CHAT:{
                     ChatMessage chatMessage = (ChatMessage) msg;
                     HostThread destThread = this.getConnectionsManager().getThreadById(chatMessage.getDest());
-                    destThread.send(chatMessage.toJSONString());
+                    destThread.send(chatMessage.toString());
                 } break;
 
                 case REQUEST: {
                     RequestMessage requestMessage = (RequestMessage) msg;
                     ResponseMessage responseMessage = answerSolver.handleRequest(this.getConnectionsManager(), requestMessage);
-                    this.send(responseMessage.toJSONString());
+                    this.send(responseMessage.toString());
                 } break;
 
                 case SYSTEM:{

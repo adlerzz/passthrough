@@ -28,7 +28,8 @@ public class Client {
             authMessage.setName(id);
 
             peer.open();
-            peer.send(authMessage.toJSONString());
+            String authmsg = authMessage.toString();
+            peer.send(authmsg);
 
             Thread inputThread = new Thread(){
                 @Override
@@ -44,14 +45,14 @@ public class Client {
                             switch (firstWord) {
                                 case "allPeers":
                                     RequestMessage requestMessage = new RequestMessage(String.valueOf((new Date().getTime())), "peers");
-                                    peer.send(requestMessage.toJSONString());
+                                    peer.send(requestMessage.toString());
                                 break;
 
                                 case "test":
                                     ChatMessage chatMessage = new ChatMessage();
                                     chatMessage.setDest(secondWord);
                                     chatMessage.setPayload("test message");
-                                    peer.send(chatMessage.toJSONString());
+                                    peer.send(chatMessage.toString());
                                 break;
 
                                 default:

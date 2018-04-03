@@ -1,9 +1,11 @@
 package by.passthrough.research.entities.messages;
 
-import org.json.simple.JSONObject;
-
 public class RequestMessage extends Message {
+
+    @JsonField
     private String command;
+
+    @JsonField
     private String id;
 
     public String getCommand() {
@@ -34,15 +36,15 @@ public class RequestMessage extends Message {
         return this.id;
     }
 
-    @Override
-    public String toJSONString() {
-        JSONObject msg = new JSONObject();
-        msg.put("type", MessageType.REQUEST.name());
-        msg.put("command", this.command);
-        msg.put("id", this.id);
-        msg.put("payload", this.payload);
-        return msg.toJSONString();
-    }
+//    @Override
+//    public String toJSONString() {
+//        JSONObject msg = new JSONObject();
+//        msg.put("type", MessageType.REQUEST.name());
+//        msg.put("command", this.command);
+//        msg.put("id", this.id);
+//        msg.put("payload", this.payload);
+//        return msg.toJSONString();
+//    }
 
     @Override
     public boolean equals(Object object){

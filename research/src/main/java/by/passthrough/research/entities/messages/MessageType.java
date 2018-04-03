@@ -6,5 +6,10 @@ public enum MessageType {
     RESPONSE,
     CHAT,
     GROUP,
-    SYSTEM
+    SYSTEM;
+
+    @Override
+    public String toString(){
+        return "\"" + name() + "\"";
+    }
 }

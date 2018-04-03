@@ -3,6 +3,8 @@ package by.passthrough.research.entities.messages;
 import org.json.simple.JSONObject;
 
 public class SystemMessage extends Message {
+
+    @JsonField
     private String subtype;
 
     public SystemMessage(){
@@ -25,14 +27,14 @@ public class SystemMessage extends Message {
         this.subtype = subtype;
     }
 
-    @Override
-    public String toJSONString() {
-        JSONObject msg = new JSONObject();
-        msg.put("type", MessageType.SYSTEM.name());
-        msg.put("subtype", this.subtype);
-        msg.put("payload", this.payload);
-        return msg.toJSONString();
-    }
+//    @Override
+//    public String toJSONString() {
+//        JSONObject msg = new JSONObject();
+//        msg.put("type", MessageType.SYSTEM.name());
+//        msg.put("subtype", this.subtype);
+//        msg.put("payload", this.payload);
+//        return msg.toJSONString();
+//    }
 
     public static final SystemMessage STOP = new SystemMessage("signal", "stop");
 

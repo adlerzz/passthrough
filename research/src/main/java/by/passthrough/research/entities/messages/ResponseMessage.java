@@ -3,6 +3,8 @@ package by.passthrough.research.entities.messages;
 import org.json.simple.JSONObject;
 
 public class ResponseMessage extends Message {
+
+    @JsonField
     private String id;
 
     public ResponseMessage(){
@@ -19,12 +21,12 @@ public class ResponseMessage extends Message {
         this.id = id;
     }
 
-    @Override
-    public String toJSONString() {
-        JSONObject msg = new JSONObject();
-        msg.put("type", MessageType.RESPONSE.name());
-        msg.put("id", this.id);
-        msg.put("payload", this.payload);
-        return msg.toJSONString();
-    }
+//    @Override
+//    public String toJSONString() {
+//        JSONObject msg = new JSONObject();
+//        msg.put("type", MessageType.RESPONSE.name());
+//        msg.put("id", this.id);
+//        msg.put("payload", this.payload);
+//        return msg.toJSONString();
+//    }
 }

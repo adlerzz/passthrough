@@ -1,9 +1,11 @@
 package by.passthrough.research.entities.messages;
 
-import org.json.simple.JSONObject;
-
 public class AuthMessage extends Message {
+
+    @JsonField
     private String name;
+
+    @JsonField
     private String creds;
 
 
@@ -27,15 +29,15 @@ public class AuthMessage extends Message {
         this.creds = creds;
     }
 
-    @Override
-    public String toJSONString() {
-        JSONObject msg = new JSONObject();
-        msg.put("type", MessageType.AUTH.name());
-        msg.put("name", this.name);
-        msg.put("creds", this.creds);
-        msg.put("payload", this.payload);
-        return msg.toJSONString();
-    }
+//    @Override
+//    public String toJSONString() {
+//        JSONObject msg = new JSONObject();
+//        msg.put("type", MessageType.AUTH.name());
+//        msg.put("name", this.name);
+//        msg.put("creds", this.creds);
+//        msg.put("payload", this.payload);
+//        return msg.toJSONString();
+//    }
 
     @Override
     public boolean equals(Object object){

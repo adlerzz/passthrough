@@ -1,8 +1,8 @@
 package by.passthrough.research.entities.messages;
 
-import org.json.simple.JSONObject;
-
 public class ChatMessage extends Message {
+
+    @JsonField
     private String dest;
 
     public ChatMessage(){
@@ -17,14 +17,6 @@ public class ChatMessage extends Message {
         this.dest = dest;
     }
 
-    @Override
-    public String toJSONString() {
-        JSONObject msg = new JSONObject();
-        msg.put("type", MessageType.CHAT.name());
-        msg.put("dest", this.dest);
-        msg.put("payload", this.payload);
-        return msg.toJSONString();
-    }
 
     @Override
     public boolean equals(Object object){
