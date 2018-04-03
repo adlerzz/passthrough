@@ -1,6 +1,8 @@
 package by.passthrough.research.engine.transceivers;
 
 import by.passthrough.research.utils.Logger;
+import by.passthrough.research.utils.configurator.Configurator;
+import by.passthrough.research.utils.configurator.LoadConfig;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -9,17 +11,20 @@ import java.net.Socket;
 
 public class PeerTransceiver extends AbstractTransceiver {
     private static Logger log = Logger.createLogger(PeerTransceiver.class, true);
-    private String host;
-    private int port;
 
-    public PeerTransceiver(String host, int port) {
-        this.host = host;
-        this.port = port;
+    @LoadConfig(name="HOST", defaultValue = "localhost")
+    private String host;
+
+    @LoadConfig(name = "PORT", defaultValue = "62333")
+    private String port;
+
+    public PeerTransceiver() {
+        Configurator.getInstance().configure(this);
     }
 
     @Override
     public void open() throws IOException {
-        this.clientSocket = new Socket(this.host, this.port);
+        this.clientSocket = new Socket(this.host, Integer.parseInt(this.port));
         this.inputStream = new DataInputStream(this.clientSocket.getInputStream());
         this.outputStream = new DataOutputStream(this.clientSocket.getOutputStream());
     }

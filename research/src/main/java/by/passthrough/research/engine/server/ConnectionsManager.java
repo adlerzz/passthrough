@@ -1,6 +1,8 @@
 package by.passthrough.research.engine.server;
 
 import by.passthrough.research.utils.Logger;
+import by.passthrough.research.utils.configurator.Configurator;
+import by.passthrough.research.utils.configurator.LoadConfig;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -17,8 +19,12 @@ public class ConnectionsManager implements Closeable {
     private HashMap<String, HostThread> hostThreads;
     private ServerSocket serverSocket;
 
-    public ConnectionsManager(int port) throws IOException {
-        this.serverSocket = new ServerSocket(port);
+    @LoadConfig(name = "PORT", defaultValue = "62333")
+    private String port;
+
+    public ConnectionsManager() throws IOException {
+        Configurator.getInstance().configure(this);
+        this.serverSocket = new ServerSocket(Integer.parseInt(this.port));
         this.pool = Executors.newFixedThreadPool(10);
         this.hostThreads = new HashMap<>();
     }

@@ -6,19 +6,23 @@ import by.passthrough.research.entities.messages.RequestMessage;
 import by.passthrough.research.entities.messages.ResponseMessage;
 import org.json.simple.JSONArray;
 
-public class AnswerSolver {
+public final class AnswerSolver {
 
-    private static AnswerSolver INSTANCE = null;
+    private static volatile AnswerSolver instance = null;
 
     private AnswerSolver(){
 
     }
 
     public static AnswerSolver getInstance() {
-        if(INSTANCE == null){
-            INSTANCE = new AnswerSolver();
+        if(instance == null){
+            synchronized (AnswerSolver.class) {
+                if(instance == null) {
+                    instance = new AnswerSolver();
+                }
+            }
         }
-        return INSTANCE;
+        return instance;
     }
 
     public String reverse(String str){

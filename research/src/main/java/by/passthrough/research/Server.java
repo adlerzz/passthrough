@@ -7,12 +7,11 @@ import by.passthrough.research.utils.Logger;
 import java.util.Random;
 
 public class Server {
-    private static int PORT = 5450;
     private static Logger log = Logger.createLogger(Server.class, true);
 
     public static void main(String[] args){
 
-        try(ConnectionsManager cm = new ConnectionsManager(PORT)){
+        try(ConnectionsManager cm = new ConnectionsManager()){
             log.info("Server started");
             cm.listen(CustomHostThread.class);
 

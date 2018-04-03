@@ -16,12 +16,10 @@ import java.util.Date;
 
 public class Client {
     private static Logger log = Logger.createLogger(Client.class, true);
-    private static int PORT = 5450;
-    private static String HOST = "10.229.90.186";
 
     public static void main(String[] args){
 
-        try(PeerTransceiver peer = new PeerTransceiver(HOST, PORT)) {
+        try(PeerTransceiver peer = new PeerTransceiver()) {
             BufferedReader reader = new BufferedReader( new InputStreamReader(System.in));
 
             String id = String.valueOf( (new Date()).getTime() );
