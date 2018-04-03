@@ -1,6 +1,7 @@
 package by.passthrough.research.engine.server;
 
 import by.passthrough.research.engine.transceivers.HostTransceiver;
+import by.passthrough.research.utils.Logger;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 public abstract class HostThread implements Callable<Void>, Closeable {
+    protected Logger log = Logger.createLogger(HostThread.class);
     private HostTransceiver host;
     protected volatile boolean stop;
     private Socket clientSocket;
@@ -57,6 +59,7 @@ public abstract class HostThread implements Callable<Void>, Closeable {
         do {
             this.doAction();
         } while (!this.stop);
+        log.debug("thread " + this.data.get("id") + " stopped");
         return null;
     }
 

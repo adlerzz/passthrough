@@ -43,7 +43,7 @@ public class CustomHostThread extends HostThread {
 
                 case REQUEST: {
                     RequestMessage requestMessage = (RequestMessage) msg;
-                    ResponseMessage responseMessage = answerSolver.handleRequest(this.getConnectionsManager(), requestMessage);
+                    ResponseMessage responseMessage = answerSolver.handleRequest(this, requestMessage);
                     this.send(responseMessage.toString());
                 } break;
 
