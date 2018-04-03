@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Properties;
 
-/**
- * Created by alst0816 on 02.04.2018
- */
 public final class Configurator {
     private static volatile Configurator instance = null;
     private Properties properties;
@@ -38,11 +35,26 @@ public final class Configurator {
             for (Field field : fields) {
                 LoadConfig annotation = field.getAnnotation(LoadConfig.class);
                 if(annotation != null) {
-                    String value = this.properties.getProperty(annotation.name(), annotation.defaultValue());
+                    String key;
+                    if(annotation.name().isEmpty()){
+                        key = field.getName().toUpperCase();
+                    } else {
+                        key = annotation.name();
+                    }
+                    String value = this.properties.getProperty(key);
 
                     boolean flag = field.isAccessible();
                     field.setAccessible(true);
-                    field.set(object, value);
+
+                    Class type = field.getType();
+                    if(int.class.equals(type)) {
+                        field.setInt(object, Integer.parseInt(value));
+                    } else if(boolean.class.equals(type)) {
+                        field.setBoolean(object, Boolean.parseBoolean(value));
+                    } else {
+                        field.set(object, value);
+                    }
+
                     field.setAccessible(flag);
                 }
             }

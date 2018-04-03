@@ -12,11 +12,11 @@ import java.net.Socket;
 public class PeerTransceiver extends AbstractTransceiver {
     private static Logger log = Logger.createLogger(PeerTransceiver.class, true);
 
-    @LoadConfig(name="HOST", defaultValue = "localhost")
-    private String host;
+    @LoadConfig
+    private String host = "localhost";
 
-    @LoadConfig(name = "PORT", defaultValue = "62333")
-    private String port;
+    @LoadConfig
+    private int port = 62333;
 
     public PeerTransceiver() {
         Configurator.getInstance().configure(this);
@@ -24,7 +24,7 @@ public class PeerTransceiver extends AbstractTransceiver {
 
     @Override
     public void open() throws IOException {
-        this.clientSocket = new Socket(this.host, Integer.parseInt(this.port));
+        this.clientSocket = new Socket(this.host, this.port);
         this.inputStream = new DataInputStream(this.clientSocket.getInputStream());
         this.outputStream = new DataOutputStream(this.clientSocket.getOutputStream());
     }

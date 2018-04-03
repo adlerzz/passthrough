@@ -1,5 +1,8 @@
 package by.passthrough.research.utils;
 
+import by.passthrough.research.utils.configurator.Configurator;
+import by.passthrough.research.utils.configurator.LoadConfig;
+
 import java.util.Arrays;
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -7,7 +10,11 @@ import java.util.stream.Collectors;
 public class Logger {
 
     private Class inClass;
+
+    @LoadConfig(name="DEBUG")
     private boolean debugEnabled = false;
+
+    @LoadConfig(name = "WARN")
     private boolean warnEnabled = true;
 
     public static Logger createLogger(Class inClass){
@@ -22,6 +29,7 @@ public class Logger {
 
     private Logger(Class inClass){
         this.inClass = inClass;
+        Configurator.getInstance().configure(this);
     }
 
     private void output(String label, Object object){

@@ -19,14 +19,18 @@ public class ConnectionsManager implements Closeable {
     private HashMap<String, HostThread> hostThreads;
     private ServerSocket serverSocket;
 
-    @LoadConfig(name = "PORT", defaultValue = "62333")
-    private String port;
+    @LoadConfig
+    private int port = 62333;
 
     public ConnectionsManager() throws IOException {
         Configurator.getInstance().configure(this);
-        this.serverSocket = new ServerSocket(Integer.parseInt(this.port));
+        this.serverSocket = new ServerSocket(this.port);
         this.pool = Executors.newFixedThreadPool(10);
         this.hostThreads = new HashMap<>();
+    }
+
+    public int getPort(){
+        return this.port;
     }
 
 
