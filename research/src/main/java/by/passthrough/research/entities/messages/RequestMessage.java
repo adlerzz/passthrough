@@ -36,27 +36,4 @@ public class RequestMessage extends Message {
         return this.id;
     }
 
-//    @Override
-//    public String toJSONString() {
-//        JSONObject msg = new JSONObject();
-//        msg.put("type", MessageType.REQUEST.name());
-//        msg.put("command", this.command);
-//        msg.put("id", this.id);
-//        msg.put("payload", this.payload);
-//        return msg.toJSONString();
-//    }
-
-    @Override
-    public boolean equals(Object object){
-        if(this == object) return true;
-        if(object == null) return false;
-        if(this.getClass() != object.getClass()) return false;
-
-        RequestMessage other = (RequestMessage) object;
-        return this.getMessageType().equals(other.getMessageType()) &&
-               this.getCommand().equals(other.getCommand()) &&
-               this.getId().equals(other.getId()) &&
-               this.getPayload().equals(other.getPayload());
-    }
-
 }

@@ -17,16 +17,4 @@ public class ChatMessage extends Message {
         this.dest = dest;
     }
 
-
-    @Override
-    public boolean equals(Object object){
-        if(this == object) return true;
-        if(object == null) return false;
-        if(this.getClass() != object.getClass()) return false;
-
-        ChatMessage other = (ChatMessage) object;
-        return this.getMessageType().equals(other.getMessageType()) &&
-               this.getDest().equals(other.getDest()) &&
-               this.getPayload().equals(other.getPayload());
-    }
 }

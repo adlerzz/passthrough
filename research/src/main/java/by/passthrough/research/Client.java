@@ -28,38 +28,53 @@ public class Client {
             authMessage.setName(id);
 
             peer.open();
-            String authmsg = authMessage.toString();
-            peer.send(authmsg);
+            peer.send(authMessage.toString());
 
             Thread inputThread = new Thread(){
                 @Override
                 public void run(){
+                    String sendMsg;
                     while (!this.isInterrupted()){
+
+                        String[] msg = new String[0];
                         try {
-                            String[] msg = reader.readLine().split(" ", 2);
-                            String firstWord = msg[0];
-                            String secondWord = null;
-                            if(msg.length > 1){
-                                secondWord = msg[1];
-                            }
-                            switch (firstWord) {
-                                case "allPeers":
-                                    RequestMessage requestMessage = new RequestMessage(String.valueOf((new Date().getTime())), "peers");
-                                    peer.send(requestMessage.toString());
+                            msg = reader.readLine().split(" ", 2);
+                            if(this.isInterrupted()){
                                 break;
-
-                                case "test":
-                                    ChatMessage chatMessage = new ChatMessage();
-                                    chatMessage.setDest(secondWord);
-                                    chatMessage.setPayload("test message");
-                                    peer.send(chatMessage.toString());
-                                break;
-
-                                default:
-                                    peer.send(secondWord + " " + firstWord);
                             }
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            log.error(e);
+                        }
+                        String firstWord = msg[0];
+                        String secondWord = null;
+                        if(msg.length > 1){
+                            secondWord = msg[1];
+                        }
+                        switch (firstWord) {
+                            case "allPeers":
+                                RequestMessage requestMessage = new RequestMessage(String.valueOf((new Date().getTime())), "peers");
+                                sendMsg = requestMessage.toString();
+                            break;
+
+                            case "test":
+                                ChatMessage chatMessage = new ChatMessage();
+                                chatMessage.setDest(secondWord);
+                                chatMessage.setPayload("test message");
+                                sendMsg = chatMessage.toString();
+                            break;
+
+                            case "end":
+                                sendMsg = SystemMessage.STOP.toString();
+                            break;
+
+                            default:
+                                sendMsg = firstWord + " " + secondWord;
+                        }
+
+                        try {
+                            peer.send(sendMsg);
+                        } catch (IOException e) {
+                            log.error(e);
                         }
                     }
                 }
@@ -76,8 +91,7 @@ public class Client {
                 MessageType messageType = msg.getMessageType();
                 switch (messageType){
                     case SYSTEM: {
-                        SystemMessage systemMessage = (SystemMessage) msg;
-                        if (SystemMessage.STOP.getPayload().equals(systemMessage.getPayload())) {
+                        if (SystemMessage.STOP.equals(msg)) {
                             end = true;
                         }
                     } break;

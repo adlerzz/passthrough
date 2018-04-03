@@ -26,10 +26,11 @@ public class CustomHostThread extends HostThread {
 
     @Override
     public void doAction() throws Exception {
-        Message msg = Message.parseFromJSON(this.receive());
+        String recv = this.receive();
+        Message msg = Message.parseFromJSON(recv);
         if(SystemMessage.STOP.equals(msg)){
             this.stop = true;
-            this.send(this.receive());
+            this.send(recv);
         } else {
 
             MessageType type = msg.getMessageType();

@@ -29,26 +29,4 @@ public class AuthMessage extends Message {
         this.creds = creds;
     }
 
-//    @Override
-//    public String toJSONString() {
-//        JSONObject msg = new JSONObject();
-//        msg.put("type", MessageType.AUTH.name());
-//        msg.put("name", this.name);
-//        msg.put("creds", this.creds);
-//        msg.put("payload", this.payload);
-//        return msg.toJSONString();
-//    }
-
-    @Override
-    public boolean equals(Object object){
-        if(this == object) return true;
-        if(object == null) return false;
-        if(this.getClass() != object.getClass()) return false;
-
-        AuthMessage other = (AuthMessage) object;
-        return this.getMessageType().equals(other.getMessageType()) &&
-               this.getName().equals(other.getName()) &&
-               this.getCreds().equals(other.getCreds()) &&
-               this.getPayload().equals(other.getPayload());
-    }
 }

@@ -33,10 +33,10 @@ public final class Configurator {
         try {
             Field[] fields = object.getClass().getDeclaredFields();
             for (Field field : fields) {
-                LoadConfig annotation = field.getAnnotation(LoadConfig.class);
-                if(annotation != null) {
+                if(field.isAnnotationPresent(LoadConfig.class)) {
+                    LoadConfig annotation = field.getAnnotation(LoadConfig.class);
                     String key;
-                    if(annotation.name().isEmpty()){
+                    if (annotation.name().isEmpty()) {
                         key = field.getName().toUpperCase();
                     } else {
                         key = annotation.name();
@@ -47,9 +47,9 @@ public final class Configurator {
                     field.setAccessible(true);
 
                     Class type = field.getType();
-                    if(int.class.equals(type)) {
+                    if (int.class.equals(type)) {
                         field.setInt(object, Integer.parseInt(value));
-                    } else if(boolean.class.equals(type)) {
+                    } else if (boolean.class.equals(type)) {
                         field.setBoolean(object, Boolean.parseBoolean(value));
                     } else {
                         field.set(object, value);

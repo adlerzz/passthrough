@@ -1,7 +1,6 @@
 package by.passthrough.research.engine.server;
 
 import by.passthrough.research.engine.transceivers.HostTransceiver;
-import org.json.simple.parser.JSONParser;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -15,13 +14,11 @@ public abstract class HostThread implements Callable<Void>, Closeable {
     protected volatile boolean stop;
     private Socket clientSocket;
     private Map<String, Object> data;
-    protected JSONParser jsonParser;
     private ConnectionsManager connectionsManager;
 
     public HostThread(){
         this.data = new HashMap<>();
         this.stop = false;
-        this.jsonParser = new JSONParser();
     }
 
     public void setClientSocket(Socket clientSocket) {
