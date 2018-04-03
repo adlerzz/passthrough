@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class HostTransceiver extends AbstractTransceiver {
-    private static Logger log = Logger.createLogger(HostTransceiver.class, true);
+    private static Logger log = Logger.createLogger(HostTransceiver.class);
 
     public HostTransceiver(Socket clientSocket) {
         this.clientSocket = clientSocket;

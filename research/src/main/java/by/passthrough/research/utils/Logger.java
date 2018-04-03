@@ -21,12 +21,6 @@ public class Logger {
         return new Logger(inClass);
     }
 
-    public static Logger createLogger(Class inClass, boolean debugEnabled){
-        Logger newLogger = new Logger(inClass);
-        newLogger.setDebugEnabled(debugEnabled);
-        return newLogger;
-    }
-
     private Logger(Class inClass){
         this.inClass = inClass;
         Configurator.getInstance().configure(this);

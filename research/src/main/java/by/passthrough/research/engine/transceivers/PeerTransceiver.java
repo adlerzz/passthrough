@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class PeerTransceiver extends AbstractTransceiver {
-    private static Logger log = Logger.createLogger(PeerTransceiver.class, true);
+    private static Logger log = Logger.createLogger(PeerTransceiver.class);
 
     @LoadConfig
     private String host = "localhost";

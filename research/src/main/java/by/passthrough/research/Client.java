@@ -15,7 +15,7 @@ import java.io.InputStreamReader;
 import java.util.Date;
 
 public class Client {
-    private static Logger log = Logger.createLogger(Client.class, true);
+    private static Logger log = Logger.createLogger(Client.class);
 
     public static void main(String[] args){
 
@@ -74,17 +74,17 @@ public class Client {
 
                 MessageType messageType = msg.getMessageType();
                 switch (messageType){
-                    case SYSTEM:
-                        SystemMessage systemMessage = (SystemMessage)msg;
-                        if(SystemMessage.STOP.getPayload().equals(systemMessage.getPayload())){
+                    case SYSTEM: {
+                        SystemMessage systemMessage = (SystemMessage) msg;
+                        if (SystemMessage.STOP.getPayload().equals(systemMessage.getPayload())) {
                             end = true;
                         }
-                    break;
+                    } break;
 
-                    case CHAT:
-                        ChatMessage chatMessage = (ChatMessage)msg;
+                    case CHAT: {
+                        ChatMessage chatMessage = (ChatMessage) msg;
                         System.out.println(chatMessage.getPayload());
-                    break;
+                    } break;
                 }
             } while (!end);
             inputThread.interrupt();

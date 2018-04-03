@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ConnectionsManager implements Closeable {
-    private static Logger log = Logger.createLogger(ConnectionsManager.class, true);
+    private static Logger log = Logger.createLogger(ConnectionsManager.class);
     private ExecutorService pool;
     private HashMap<String, HostThread> hostThreads;
     private ServerSocket serverSocket;

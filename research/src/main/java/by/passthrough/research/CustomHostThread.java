@@ -9,11 +9,8 @@ import by.passthrough.research.entities.messages.MessageType;
 import by.passthrough.research.entities.messages.RequestMessage;
 import by.passthrough.research.entities.messages.ResponseMessage;
 import by.passthrough.research.entities.messages.SystemMessage;
-import by.passthrough.research.utils.Logger;
-import org.json.simple.JSONArray;
 
 public class CustomHostThread extends HostThread {
-    private static Logger log = Logger.createLogger(CustomHostThread.class, true);
     private static final AnswerSolver answerSolver = AnswerSolver.getInstance();
     public CustomHostThread(){
         super();
@@ -21,9 +18,7 @@ public class CustomHostThread extends HostThread {
 
     @Override
     public void prepare() throws Exception {
-        String recv = this.receive();
-
-        AuthMessage msg = (AuthMessage) Message.parseFromJSON(recv);
+        AuthMessage msg = (AuthMessage) Message.parseFromJSON(this.receive());
         this.put("id", msg.getName());
         this.getConnectionsManager().addNamedThread(msg.getName(), this);
 
@@ -31,36 +26,30 @@ public class CustomHostThread extends HostThread {
 
     @Override
     public void doAction() throws Exception {
-        String recv = this.receive();
-        Message msg = Message.parseFromJSON(recv);
+        Message msg = Message.parseFromJSON(this.receive());
         if(SystemMessage.STOP.equals(msg)){
             this.stop = true;
-            this.send(recv);
+            this.send(this.receive());
         } else {
 
             MessageType type = msg.getMessageType();
-            switch (type)
-            {
+            switch (type){
                 case CHAT:{
                     ChatMessage chatMessage = (ChatMessage) msg;
                     HostThread destThread = this.getConnectionsManager().getThreadById(chatMessage.getDest());
                     destThread.send(chatMessage.toJSONString());
-                    break;
-                }
+                } break;
 
                 case REQUEST: {
                     RequestMessage requestMessage = (RequestMessage) msg;
                     ResponseMessage responseMessage = answerSolver.handleRequest(this.getConnectionsManager(), requestMessage);
                     this.send(responseMessage.toJSONString());
-                    break;
-                }
+                } break;
 
                 case SYSTEM:{
                     SystemMessage systemMessage = (SystemMessage) msg;
                 } break;
-
             }
-
         }
     }
 }

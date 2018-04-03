@@ -4,7 +4,7 @@ import by.passthrough.research.engine.server.ConnectionsManager;
 import by.passthrough.research.utils.Logger;
 
 public class Server {
-    private static Logger log = Logger.createLogger(Server.class, true);
+    private static Logger log = Logger.createLogger(Server.class);
 
     public static void main(String[] args){
 
