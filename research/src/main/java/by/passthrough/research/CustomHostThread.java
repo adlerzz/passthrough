@@ -2,13 +2,7 @@ package by.passthrough.research;
 
 import by.passthrough.research.engine.ai.AnswerSolver;
 import by.passthrough.research.engine.server.HostThread;
-import by.passthrough.research.entities.messages.AuthMessage;
-import by.passthrough.research.entities.messages.ChatMessage;
-import by.passthrough.research.entities.messages.Message;
-import by.passthrough.research.entities.messages.MessageType;
-import by.passthrough.research.entities.messages.RequestMessage;
-import by.passthrough.research.entities.messages.ResponseMessage;
-import by.passthrough.research.entities.messages.SystemMessage;
+import by.passthrough.research.entities.messages.*;
 
 public class CustomHostThread extends HostThread {
     private static final AnswerSolver answerSolver = AnswerSolver.getInstance();

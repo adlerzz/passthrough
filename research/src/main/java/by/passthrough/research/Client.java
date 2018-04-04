@@ -1,12 +1,7 @@
 package by.passthrough.research;
 
 import by.passthrough.research.engine.transceivers.PeerTransceiver;
-import by.passthrough.research.entities.messages.AuthMessage;
-import by.passthrough.research.entities.messages.ChatMessage;
-import by.passthrough.research.entities.messages.Message;
-import by.passthrough.research.entities.messages.MessageType;
-import by.passthrough.research.entities.messages.RequestMessage;
-import by.passthrough.research.entities.messages.SystemMessage;
+import by.passthrough.research.entities.messages.*;
 import by.passthrough.research.utils.Logger;
 
 import java.io.BufferedReader;
