@@ -7,8 +7,8 @@ import org.json.simple.parser.ParseException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class Message {
 
@@ -107,16 +107,20 @@ public abstract class Message {
     }
 
     private ArrayList<Field> getFieldsByAnnotationType(Class<? extends Annotation> annotationType){
-        ArrayList<Field> fields = new ArrayList<>();
-
         Class msgClass = this.getClass();
         Class superClass = msgClass.getSuperclass();
-        if(superClass != null) {
-            fields.addAll(new ArrayList<>(Arrays.asList(superClass.getDeclaredFields())));
-        }
-        fields.addAll(new ArrayList<>(Arrays.asList(msgClass.getDeclaredFields())));
 
-        return fields.stream()
+        Stream<Field> parentFields;
+        Stream<Field> ownFields;
+
+        if(superClass != null) {
+            parentFields = Stream.of(superClass.getDeclaredFields());
+        } else {
+            parentFields = Stream.empty();
+        }
+        ownFields = Stream.of(msgClass.getDeclaredFields());
+
+        return Stream.concat(parentFields, ownFields)
                 .filter( field -> field.isAnnotationPresent(annotationType) )
                 .collect(Collectors.toCollection(ArrayList::new));
 
