@@ -1,14 +1,14 @@
 package by.passthrough.research.entities.messages;
 
+import by.passthrough.research.utils.jsoner.JsonField;
+
 public class SystemMessage extends Message {
 
     @JsonField
     private String subtype;
 
     public SystemMessage(){
-        this.messageType = MessageType.SYSTEM;
-        this.subtype = null;
-        this.payload = null;
+        this(null, null);
     }
 
     public SystemMessage(String subtype, Object payload){

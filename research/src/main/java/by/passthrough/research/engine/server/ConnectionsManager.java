@@ -22,10 +22,13 @@ public class ConnectionsManager implements Closeable {
     @LoadConfig
     private int port = 62333;
 
+    @LoadConfig(name = "MAX_CONNECTIONS")
+    private int maxThreads = 120;
+
     public ConnectionsManager() throws IOException {
         Configurator.getInstance().configure(this);
         this.serverSocket = new ServerSocket(this.port);
-        this.pool = Executors.newFixedThreadPool(10);
+        this.pool = Executors.newFixedThreadPool(maxThreads);
         this.hostThreads = new HashMap<>();
     }
 
@@ -33,21 +36,25 @@ public class ConnectionsManager implements Closeable {
         return this.port;
     }
 
-
     public <T extends HostThread> void listen(Class<T> hostThreadClass) throws Exception {
         while(!this.serverSocket.isClosed()){
             Socket clientSocket = this.serverSocket.accept();
-            log.debug("new thread");
             HostThread hostThread = hostThreadClass.newInstance();
             hostThread.setConnectionsManager(this);
             hostThread.setClientSocket(clientSocket);
             this.pool.submit(hostThread);
+            log.debug("new thread");
         }
     }
 
     synchronized public void addNamedThread(String id, HostThread hostThread){
         this.hostThreads.put(id, hostThread);
         log.debug("added thread " + id);
+    }
+
+    synchronized public void removeNamedThread(String id){
+        this.hostThreads.remove(id);
+        log.debug("removed thread " + id);
     }
 
     public HostThread getThreadById(String id){

@@ -15,7 +15,7 @@ public abstract class HostThread implements Callable<Void>, Closeable {
     private HostTransceiver host;
     protected volatile boolean stop;
     private Socket clientSocket;
-    private Map<String, Object> data;
+    protected Map<String, Object> data;
     private ConnectionsManager connectionsManager;
 
     public HostThread(){
@@ -59,7 +59,9 @@ public abstract class HostThread implements Callable<Void>, Closeable {
         do {
             this.doAction();
         } while (!this.stop);
-        log.debug("thread " + this.data.get("id") + " stopped");
+        String id = (String)this.get("id");
+        log.debug("thread " + id + " stopped");
+        this.getConnectionsManager().removeNamedThread(id);
         return null;
     }
 

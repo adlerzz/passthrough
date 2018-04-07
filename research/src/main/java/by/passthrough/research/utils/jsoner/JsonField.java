@@ -1,4 +1,4 @@
-package by.passthrough.research.entities.messages;
+package by.passthrough.research.utils.jsoner;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

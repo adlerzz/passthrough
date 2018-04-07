@@ -1,5 +1,7 @@
 package by.passthrough.research.entities.messages;
 
+import by.passthrough.research.utils.jsoner.JsonField;
+
 public class RequestMessage extends Message {
 
     @JsonField
@@ -17,9 +19,7 @@ public class RequestMessage extends Message {
     }
 
     public RequestMessage(){
-        this.messageType = MessageType.REQUEST;
-        this.command = null;
-        this.id = null;
+        this(null, null);
     }
 
     public RequestMessage(String id, String command){

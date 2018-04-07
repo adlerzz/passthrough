@@ -1,5 +1,7 @@
 package by.passthrough.research.entities.messages;
 
+import by.passthrough.research.utils.jsoner.JsonField;
+
 public class ChatMessage extends Message {
 
     @JsonField
