@@ -29,7 +29,7 @@ public class Jsoner {
         return instance;
     }
 
-    public void fill(JSONObject jsonObject, Jsonable object){
+    public void fillObject(JSONObject jsonObject, Jsonable object){
         ArrayList<Field> fields = getJsonFields(object.getClass());
 
         for(Field field: fields){

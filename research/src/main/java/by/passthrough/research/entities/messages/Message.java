@@ -36,7 +36,7 @@ public abstract class Message implements Jsonable{
             if(jsonObject.containsKey("messageType")){
                 MessageType type = MessageType.valueOf( (String) jsonObject.get("messageType") );
                 Message message = type.getInstantiate().get();
-                Jsoner.getInstance().fill(jsonObject, message);
+                Jsoner.getInstance().fillObject(jsonObject, message);
                 return message;
             } else {
                 return new SystemMessage("error", "no any message type error");
