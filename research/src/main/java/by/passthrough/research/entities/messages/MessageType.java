@@ -7,7 +7,7 @@ public enum MessageType {
     REQUEST(RequestMessage::new),
     RESPONSE(ResponseMessage::new),
     CHAT(ChatMessage::new),
-    GROUP(SystemMessage::new),
+    GROUP(GroupMessage::new),
     SYSTEM(SystemMessage::new);
 
     private Supplier<Message> instantiate;
