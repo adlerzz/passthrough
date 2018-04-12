@@ -19,7 +19,7 @@ public abstract class AbstractTransceiver implements Closeable {
     }
 
     public String receive() throws IOException {
-        while(inputStream.available() < 1){
+        while(inputStream == null || inputStream.available() < 1){
             try {
                 Thread.sleep(110);
             } catch (InterruptedException e) {

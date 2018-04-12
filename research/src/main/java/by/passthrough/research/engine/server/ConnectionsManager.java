@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 public class ConnectionsManager implements Closeable {
     private static Logger log = Logger.createLogger(ConnectionsManager.class);
     private ExecutorService pool;
-    private HashMap<String, HostThread> hostThreads;
+    private HashMap<Long, HostThread> hostThreads;
     private ServerSocket serverSocket;
 
     @LoadConfig
@@ -47,17 +47,17 @@ public class ConnectionsManager implements Closeable {
         }
     }
 
-    synchronized public void addNamedThread(String id, HostThread hostThread){
+    synchronized public void addNamedThread(long id, HostThread hostThread){
         this.hostThreads.put(id, hostThread);
         log.debug("added thread " + id);
     }
 
-    synchronized public void removeNamedThread(String id){
+    synchronized public void removeNamedThread(long id){
         this.hostThreads.remove(id);
         log.debug("removed thread " + id);
     }
 
-    public HostThread getThreadById(String id){
+    public HostThread getThreadById(long id){
         return this.hostThreads.get(id);
     }
 

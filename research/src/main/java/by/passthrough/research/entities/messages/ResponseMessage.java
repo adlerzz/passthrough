@@ -5,19 +5,19 @@ import by.passthrough.research.utils.jsoner.JsonField;
 public class ResponseMessage extends Message {
 
     @JsonField
-    private String id;
+    private long id;
 
     public ResponseMessage(){
         this.messageType = MessageType.RESPONSE;
-        this.id = null;
+        this.id = -1;
         this.payload = null;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 

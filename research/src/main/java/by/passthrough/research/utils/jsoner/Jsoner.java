@@ -1,10 +1,13 @@
 package by.passthrough.research.utils.jsoner;
 
+import by.passthrough.research.utils.Logger;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -13,6 +16,7 @@ import java.util.stream.Stream;
  */
 public class Jsoner {
     private static Jsoner instance = null;
+    private static final Logger log = Logger.createLogger(Jsoner.class);
 
     private Jsoner() {
 
@@ -45,13 +49,25 @@ public class Jsoner {
                     value = jsonObject.get(annotation.key());
                 }
 
-                if(field.getType().isEnum()){
-                    value = Enum.valueOf((Class<? extends Enum>)field.getType(), value.toString());
+                Class fieldType = field.getType();
+
+                if(fieldType.isEnum()){
+                    value = Enum.valueOf((Class<? extends Enum>)fieldType, value.toString());
+                }
+
+                if(Arrays.stream(fieldType.getInterfaces()).anyMatch(Jsonable.class::equals)){
+                    Jsonable jsonableObject = (Jsonable)fieldType.newInstance();
+
+                    JSONObject jsonValue = (JSONObject) new JSONParser().parse(value.toString());
+                    fillObject(jsonValue, jsonableObject);
+                    value = jsonableObject;
                 }
 
                 field.set(object, value);
 
-            } catch (IllegalAccessException ignored) {}
+            } catch (IllegalAccessException | InstantiationException | ParseException e) {
+                log.error(e);
+            }
             field.setAccessible(flag);
         }
     }

@@ -8,7 +8,7 @@ public class RequestMessage extends Message {
     private String command;
 
     @JsonField
-    private String id;
+    private long id;
 
     public String getCommand() {
         return this.command;
@@ -19,20 +19,20 @@ public class RequestMessage extends Message {
     }
 
     public RequestMessage(){
-        this(null, null);
+        this(-1, null);
     }
 
-    public RequestMessage(String id, String command){
+    public RequestMessage(long id, String command){
         this.messageType = MessageType.REQUEST;
         this.command = command;
         this.id = id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public String getId() {
+    public long getId() {
         return this.id;
     }
 

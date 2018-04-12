@@ -59,7 +59,7 @@ public abstract class HostThread implements Callable<Void>, Closeable {
         do {
             this.doAction();
         } while (!this.stop);
-        String id = (String)this.get("id");
+        long id = Long.valueOf(this.get("id").toString());
         log.debug("thread " + id + " stopped");
         this.getConnectionsManager().removeNamedThread(id);
         return null;

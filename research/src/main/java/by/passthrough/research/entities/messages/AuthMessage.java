@@ -1,11 +1,15 @@
 package by.passthrough.research.entities.messages;
 
+import by.passthrough.research.entities.users.User;
 import by.passthrough.research.utils.jsoner.JsonField;
 
 public class AuthMessage extends Message {
 
     @JsonField
-    private String name;
+    private long id;
+
+    @JsonField
+    private User user;
 
     @JsonField
     private String creds;
@@ -15,12 +19,20 @@ public class AuthMessage extends Message {
         this.messageType = MessageType.AUTH;
     }
 
-    public String getName() {
-        return name;
+    public long getId() {
+        return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return this.user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getCreds() {

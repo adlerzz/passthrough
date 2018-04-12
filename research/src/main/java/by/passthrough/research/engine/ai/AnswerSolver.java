@@ -4,6 +4,7 @@ import by.passthrough.research.engine.server.HostThread;
 import by.passthrough.research.entities.messages.RequestMessage;
 import by.passthrough.research.entities.messages.ResponseMessage;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 public final class AnswerSolver {
 
@@ -32,7 +33,9 @@ public final class AnswerSolver {
                 JSONArray peers = new JSONArray();
                 for(HostThread aHostThread: hostThread.getConnectionsManager().getThreads()){
                     if(!hostThread.equals(aHostThread) ) {
-                        peers.add(aHostThread.get("id"));
+                        JSONObject peer = new JSONObject();
+                        peer.put("user", aHostThread.get("user"));
+                        peers.add(peer);
                     }
                 }
                 responseMessage.setId(requestMessage.getId());

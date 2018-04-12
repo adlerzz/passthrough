@@ -13,8 +13,9 @@ public class CustomHostThread extends HostThread {
     @Override
     public void prepare() throws Exception {
         AuthMessage msg = (AuthMessage) Message.parseFromJSON(this.receive());
-        this.put("id", msg.getName());
-        this.getConnectionsManager().addNamedThread(msg.getName(), this);
+        this.put("id", msg.getId());
+        this.put("user", msg.getUser());
+        this.getConnectionsManager().addNamedThread(msg.getId(), this);
 
     }
 
