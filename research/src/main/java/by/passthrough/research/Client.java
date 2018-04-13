@@ -8,6 +8,9 @@ import by.passthrough.research.utils.Logger;
 
 import java.io.IOException;
 
+/**
+ * Main class of client part
+ */
 public class Client {
     private static Logger log = Logger.createLogger(Client.class);
 

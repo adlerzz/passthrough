@@ -10,15 +10,23 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-public abstract class HostThread implements Callable<Void>, Closeable {
-    protected Logger log = Logger.createLogger(HostThread.class);
+/**
+ * It is the class that should be a superclass for the concrete server thread.
+ * This class realizes some general functionality related to linkage with
+ * connection manager, sockets, incapsulates sending and receiving data.
+ * In inheriting class just should be implemented how the server
+ * thread should react to messages from clients.
+ * @see by.passthrough.research.CustomHostThread CustomHostThread
+ */
+public abstract class AbstractHostThread implements Callable<Void>, Closeable {
+    protected Logger log = Logger.createLogger(AbstractHostThread.class);
     private HostTransceiver host;
     protected volatile boolean stop;
     private Socket clientSocket;
     protected Map<String, Object> data;
     private ConnectionsManager connectionsManager;
 
-    public HostThread(){
+    public AbstractHostThread(){
         this.data = new HashMap<>();
         this.stop = false;
     }

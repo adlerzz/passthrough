@@ -5,7 +5,7 @@ import by.passthrough.research.utils.jsoner.Jsonable;
 import by.passthrough.research.utils.jsoner.Jsoner;
 
 /**
- * Created by alst0816 on 12.04.2018
+ * POJO User
  */
 public class User implements Jsonable {
 

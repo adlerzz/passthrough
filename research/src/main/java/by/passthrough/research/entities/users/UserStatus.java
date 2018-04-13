@@ -1,8 +1,5 @@
 package by.passthrough.research.entities.users;
 
-/**
- * Created by alst0816 on 12.04.2018
- */
 public enum UserStatus {
     ONLINE,
     DO_NOT_DISTURB,

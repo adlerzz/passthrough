@@ -11,9 +11,6 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * Created by alst0816 on 06.04.2018
- */
 public class Jsoner {
     private static Jsoner instance = null;
     private static final Logger log = Logger.createLogger(Jsoner.class);

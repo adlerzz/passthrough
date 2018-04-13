@@ -10,9 +10,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-/**
- * Created by alst0816 on 11.04.2018
- */
 public class InputThread extends Thread {
 
     private static Logger log = Logger.createLogger(InputThread.class);

@@ -1,11 +1,16 @@
-package by.passthrough.research.engine.ai;
+package by.passthrough.research.engine.server.ai;
 
-import by.passthrough.research.engine.server.HostThread;
+import by.passthrough.research.engine.server.AbstractHostThread;
 import by.passthrough.research.entities.messages.RequestMessage;
 import by.passthrough.research.entities.messages.ResponseMessage;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.util.ArrayList;
+
+/**
+ * Singleton for various methods for handling messages
+ */
 public final class AnswerSolver {
 
     private static volatile AnswerSolver instance = null;
@@ -25,13 +30,21 @@ public final class AnswerSolver {
         return instance;
     }
 
-    public ResponseMessage handleRequest(HostThread hostThread, RequestMessage requestMessage){
+    /**
+     * Could be called to getting response message to request message
+     * @param hostThread which thread call handling
+     * @param requestMessage actually request message
+     * @return appropriated response message
+     */
+    public ResponseMessage handleRequest(AbstractHostThread hostThread, RequestMessage requestMessage){
         ResponseMessage responseMessage = new ResponseMessage();
         String cmd = requestMessage.getCommand();
         switch (cmd){
             case "peers": {
+
+                ArrayList<AbstractHostThread> allThreads = hostThread.getConnectionsManager().getThreads();
                 JSONArray peers = new JSONArray();
-                for(HostThread aHostThread: hostThread.getConnectionsManager().getThreads()){
+                for(AbstractHostThread aHostThread: allThreads){
                     if(!hostThread.equals(aHostThread) ) {
                         JSONObject peer = new JSONObject();
                         peer.put("user", aHostThread.get("user"));

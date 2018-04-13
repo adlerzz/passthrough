@@ -29,6 +29,11 @@ public abstract class Message implements Jsonable{
         this.payload = payload;
     }
 
+    /**
+     * Method creates concrete appropriate Message object from JSON-string
+     * @param json JSON-string which would be converted to message object
+     * @return Message object
+     */
     public static Message parseFromJSON(String json){
         JSONParser jsonParser = new JSONParser();
         try {
