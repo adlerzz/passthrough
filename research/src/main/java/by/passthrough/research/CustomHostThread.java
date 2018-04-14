@@ -1,15 +1,22 @@
 package by.passthrough.research;
 
-import by.passthrough.research.engine.ai.AnswerSolver;
-import by.passthrough.research.engine.server.HostThread;
+import by.passthrough.research.engine.server.ai.AnswerSolver;
+import by.passthrough.research.engine.server.AbstractHostThread;
 import by.passthrough.research.entities.messages.*;
 
-public class CustomHostThread extends HostThread {
+/**
+ * Implementation of {@link AbstractHostThread} contains the actually server reactions to messages from clients
+ */
+public class CustomHostThread extends AbstractHostThread {
     private static final AnswerSolver answerSolver = AnswerSolver.getInstance();
     public CustomHostThread(){
         super();
     }
 
+    /**
+     * Let first transceiving be an authorization
+     * @throws Exception
+     */
     @Override
     public void prepare() throws Exception {
         AuthMessage msg = (AuthMessage) Message.parseFromJSON(this.receive());
@@ -19,6 +26,10 @@ public class CustomHostThread extends HostThread {
 
     }
 
+    /**
+     * Next transceivings are just reacting
+     * @throws Exception
+     */
     @Override
     public void doAction() throws Exception {
         String recv = this.receive();
@@ -32,7 +43,7 @@ public class CustomHostThread extends HostThread {
             switch (type){
                 case CHAT:{
                     ChatMessage chatMessage = (ChatMessage) msg;
-                    HostThread destThread = this.getConnectionsManager().getThreadById(chatMessage.getDest());
+                    AbstractHostThread destThread = this.getConnectionsManager().getThreadById(chatMessage.getDest());
                     destThread.send(chatMessage.toString());
                 } break;
 
