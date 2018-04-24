@@ -1,22 +1,20 @@
 package by.passthrough.research.utils.jsoner;
 
 import by.passthrough.research.utils.Logger;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 
 public class Jsoner {
     private static Jsoner instance = null;
     private static final Logger log = Logger.createLogger(Jsoner.class);
+    private JsonParser jsonParser;
+    private Gson gson;
 
     private Jsoner() {
-
+        this.jsonParser = new JsonParser();
+        this.gson = new Gson();
     }
 
     public static Jsoner getInstance() {
@@ -30,88 +28,26 @@ public class Jsoner {
         return instance;
     }
 
-    public void fillObject(JSONObject jsonObject, Jsonable object){
-        ArrayList<Field> fields = getJsonFields(object.getClass());
+    public JsonObject parse(String json){
+        try {
+            return this.jsonParser.parse(json).getAsJsonObject();
+        } catch (JsonSyntaxException ex){
+            log.error(ex);
+            return null;
+        }
+    }
 
-        for(Field field: fields){
-
-            boolean flag = field.isAccessible();
-            JsonField annotation = field.getAnnotation(JsonField.class);
-            field.setAccessible(true);
-            try {
-                Object value;
-                if(annotation.key().isEmpty()) {
-                    value = jsonObject.get(field.getName());
-                } else {
-                    value = jsonObject.get(annotation.key());
-                }
-
-                Class fieldType = field.getType();
-
-                if(fieldType.isEnum()){
-                    value = Enum.valueOf((Class<? extends Enum>)fieldType, value.toString());
-                }
-
-                if(Arrays.stream(fieldType.getInterfaces()).anyMatch(Jsonable.class::equals)){
-                    Jsonable jsonableObject = (Jsonable)fieldType.newInstance();
-
-                    JSONObject jsonValue = (JSONObject) new JSONParser().parse(value.toString());
-                    fillObject(jsonValue, jsonableObject);
-                    value = jsonableObject;
-                }
-
-                field.set(object, value);
-
-            } catch (IllegalAccessException | InstantiationException | ParseException e) {
-                log.error(e);
-            }
-            field.setAccessible(flag);
+    public <T> T parse(String json, Class<T> objectClass){
+        try {
+            return this.gson.fromJson(json, objectClass);
+        } catch (JsonSyntaxException ex){
+            log.error(ex);
+            return null;
         }
     }
 
     public String toJSONString(Jsonable object){
-        JSONObject msg = new JSONObject();
-        ArrayList<Field> fields = getJsonFields(object.getClass());
-
-        for(Field field: fields){
-            boolean flag = field.isAccessible();
-            JsonField annotation = field.getAnnotation(JsonField.class);
-            field.setAccessible(true);
-            try {
-                Object value = field.get(object);
-                String key;
-                if(value != null) {
-                    if(annotation.key().isEmpty()) {
-                        key = field.getName();
-                    } else {
-                        key = annotation.key();
-                    }
-                    msg.put(key, value);
-                }
-            } catch (IllegalAccessException ignored) {}
-            field.setAccessible(flag);
-        }
-
-        return msg.toJSONString();
+        return this.gson.toJson(object, object.getClass());
     }
 
-    private ArrayList<Field> getJsonFields(Class<? extends Jsonable> jsonableClass){
-
-        Class superClass = jsonableClass.getSuperclass();
-
-        Stream<Field> parentFields;
-        Stream<Field> ownFields;
-
-        if(superClass != null) {
-            parentFields = Stream.of(superClass.getDeclaredFields());
-        } else {
-            parentFields = Stream.empty();
-        }
-        ownFields = Stream.of(jsonableClass.getDeclaredFields());
-
-        return Stream.concat(parentFields, ownFields)
-                .filter( field -> field.isAnnotationPresent(JsonField.class) )
-                .collect(Collectors.toCollection(ArrayList::new));
-
-    }
 }

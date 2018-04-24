@@ -3,8 +3,10 @@ package by.passthrough.research.engine.server.ai;
 import by.passthrough.research.engine.server.AbstractHostThread;
 import by.passthrough.research.entities.messages.RequestMessage;
 import by.passthrough.research.entities.messages.ResponseMessage;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import by.passthrough.research.entities.users.User;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 
@@ -14,11 +16,7 @@ import java.util.ArrayList;
 public final class AnswerSolver {
 
     private static volatile AnswerSolver instance = null;
-
-    private AnswerSolver(){
-
-    }
-
+    private AnswerSolver(){}
     public static AnswerSolver getInstance() {
         if(instance == null){
             synchronized (AnswerSolver.class) {
@@ -41,13 +39,12 @@ public final class AnswerSolver {
         String cmd = requestMessage.getCommand();
         switch (cmd){
             case "peers": {
-
                 ArrayList<AbstractHostThread> allThreads = hostThread.getConnectionsManager().getThreads();
-                JSONArray peers = new JSONArray();
+                JsonArray peers = new JsonArray();
                 for(AbstractHostThread aHostThread: allThreads){
                     if(!hostThread.equals(aHostThread) ) {
-                        JSONObject peer = new JSONObject();
-                        peer.put("user", aHostThread.get("user"));
+                        JsonObject peer = new JsonObject();
+                        peer.add("user", (new Gson()).toJsonTree(aHostThread.get("user")));
                         peers.add(peer);
                     }
                 }

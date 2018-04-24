@@ -1,22 +1,18 @@
 package by.passthrough.research.entities.messages;
 
 import by.passthrough.research.entities.users.User;
-import by.passthrough.research.utils.jsoner.JsonField;
 
 public class AuthMessage extends Message {
 
-    @JsonField
     private long id;
-
-    @JsonField
     private User user;
-
-    @JsonField
     private String creds;
 
-
-    public AuthMessage(){
+    public AuthMessage(long id, User user) {
         this.messageType = MessageType.AUTH;
+        this.id = id;
+        this.user = user;
+        this.creds = null;
     }
 
     public long getId() {

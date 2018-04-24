@@ -22,6 +22,7 @@ public abstract class AbstractHostThread implements Callable<Void>, Closeable {
     protected Logger log = Logger.createLogger(AbstractHostThread.class);
     private HostTransceiver host;
     protected volatile boolean stop;
+    protected long id;
     private Socket clientSocket;
     protected Map<String, Object> data;
     private ConnectionsManager connectionsManager;
@@ -51,7 +52,7 @@ public abstract class AbstractHostThread implements Callable<Void>, Closeable {
         return this.data.get(key);
     }
 
-    protected String receive() throws IOException {
+    private String receive() throws IOException {
         return this.host.receive();
     }
 
@@ -63,19 +64,20 @@ public abstract class AbstractHostThread implements Callable<Void>, Closeable {
     public Void call() throws Exception {
         this.host = new HostTransceiver(clientSocket);
         this.host.open();
-        this.prepare();
+
+        this.prepare(this.receive());
         do {
-            this.doAction();
+            this.doAction(this.receive());
         } while (!this.stop);
-        long id = Long.valueOf(this.get("id").toString());
-        log.debug("thread " + id + " stopped");
-        this.getConnectionsManager().removeNamedThread(id);
+
+        log.debug("thread " + this.id + " stopped");
+        this.getConnectionsManager().removeNamedThread(this.id);
         return null;
     }
 
-    public abstract void prepare() throws Exception;
+    public abstract void prepare(String received);
 
-    public abstract void doAction() throws Exception;
+    public abstract void doAction(String received) throws Exception;
 
     @Override
     public void close() throws IOException {

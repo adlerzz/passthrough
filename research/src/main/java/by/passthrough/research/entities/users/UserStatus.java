@@ -6,9 +6,4 @@ public enum UserStatus {
     AWAY_FROM_KEYBOARD,
     OFFLINE,
     EXIST;
-
-    @Override
-    public String toString() {
-        return "\"" + name() + "\"";
-    }
 }

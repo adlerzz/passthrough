@@ -15,15 +15,13 @@ public class CustomHostThread extends AbstractHostThread {
 
     /**
      * Let first transceiving be an authorization
-     * @throws Exception
      */
     @Override
-    public void prepare() throws Exception {
-        AuthMessage msg = (AuthMessage) Message.parseFromJSON(this.receive());
-        this.put("id", msg.getId());
+    public void prepare(String received) {
+        AuthMessage msg = (AuthMessage) Message.parseFromJSON(received);
+        this.id = msg.getId();
         this.put("user", msg.getUser());
         this.getConnectionsManager().addNamedThread(msg.getId(), this);
-
     }
 
     /**
@@ -31,12 +29,11 @@ public class CustomHostThread extends AbstractHostThread {
      * @throws Exception
      */
     @Override
-    public void doAction() throws Exception {
-        String recv = this.receive();
-        Message msg = Message.parseFromJSON(recv);
+    public void doAction(String received) throws Exception {
+        Message msg = Message.parseFromJSON(received);
         if(SystemMessage.STOP.equals(msg)){
             this.stop = true;
-            this.send(recv);
+            this.send(received);
         } else {
 
             MessageType type = msg.getMessageType();
@@ -44,13 +41,13 @@ public class CustomHostThread extends AbstractHostThread {
                 case CHAT:{
                     ChatMessage chatMessage = (ChatMessage) msg;
                     AbstractHostThread destThread = this.getConnectionsManager().getThreadById(chatMessage.getDest());
-                    destThread.send(chatMessage.toString());
+                    destThread.send(chatMessage.toJSONString());
                 } break;
 
                 case REQUEST: {
                     RequestMessage requestMessage = (RequestMessage) msg;
                     ResponseMessage responseMessage = answerSolver.handleRequest(this, requestMessage);
-                    this.send(responseMessage.toString());
+                    this.send(responseMessage.toJSONString());
                 } break;
 
                 case SYSTEM:{

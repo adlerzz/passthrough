@@ -1,17 +1,14 @@
 package by.passthrough.research.entities.messages;
 
-import by.passthrough.research.utils.jsoner.JsonField;
-
 public class ChatMessage extends Message {
-
-    @JsonField
     private long src;
-
-    @JsonField
     private long dest;
 
-    public ChatMessage(){
+    public ChatMessage(long src, long dest, Object payload) {
         this.messageType = MessageType.CHAT;
+        this.src = src;
+        this.dest = dest;
+        this.payload = payload;
     }
 
     public long getSrc() {

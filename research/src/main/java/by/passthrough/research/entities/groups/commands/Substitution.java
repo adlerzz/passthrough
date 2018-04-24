@@ -1,34 +1,27 @@
 package by.passthrough.research.entities.groups.commands;
 
-import by.passthrough.research.utils.jsoner.JsonField;
-import by.passthrough.research.utils.jsoner.Jsonable;
-import by.passthrough.research.utils.jsoner.Jsoner;
-
 /**
  * Created by alst0816 on 14.04.2018
  */
-public class Substitution implements Jsonable {
-    @JsonField
+public class Substitution {
+    private String name;
     private SubstitutionType type;
-
-    @JsonField
     private Integer min;
-
-    @JsonField
     private Integer max;
-
-    @JsonField(key = "default")
-    private Object defaultValue;
-
-    @JsonField(key = "ref")
+    private Integer defaultValue;
     private String reference;
 
-    public Substitution(SubstitutionType type) {
+    public Substitution(String name, SubstitutionType type) {
+        this.name = name;
         this.type = type;
         this.min = null;
         this.max = null;
         this.defaultValue = null;
         this.reference = null;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public SubstitutionType getType() {
@@ -51,11 +44,11 @@ public class Substitution implements Jsonable {
         this.max = max;
     }
 
-    public Object getDefaultValue() {
+    public Integer getDefaultValue() {
         return defaultValue;
     }
 
-    public void setDefaultValue(Object defaultValue) {
+    public void setDefaultValue(Integer defaultValue) {
         this.defaultValue = defaultValue;
     }
 
@@ -67,8 +60,4 @@ public class Substitution implements Jsonable {
         this.reference = reference;
     }
 
-    @Override
-    public String toString() {
-        return Jsoner.getInstance().toJSONString(this);
-    }
 }

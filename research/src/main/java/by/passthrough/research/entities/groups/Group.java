@@ -1,23 +1,15 @@
 package by.passthrough.research.entities.groups;
 
 import by.passthrough.research.entities.groups.commands.Command;
-import by.passthrough.research.utils.jsoner.JsonField;
 import by.passthrough.research.utils.jsoner.Jsonable;
-import by.passthrough.research.utils.jsoner.Jsoner;
 
 import java.util.ArrayList;
 
-public class Group implements Jsonable {
-    @JsonField
+public class Group implements Jsonable{
+
     private long id;
-
-    @JsonField
     private ArrayList<Role> roles;
-
-    @JsonField
     private ArrayList<Command> commands;
-
-    @JsonField
     private ArrayList<Resource> resources;
 
     public Group() {
@@ -46,8 +38,4 @@ public class Group implements Jsonable {
         return resources;
     }
 
-    @Override
-    public String toString(){
-        return Jsoner.getInstance().toJSONString(this);
-    }
 }

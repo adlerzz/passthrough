@@ -38,6 +38,4 @@ public class HostTransceiver extends AbstractTransceiver {
         return res;
     }
 
-
-
 }

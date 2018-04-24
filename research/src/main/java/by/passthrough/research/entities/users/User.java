@@ -1,40 +1,25 @@
 package by.passthrough.research.entities.users;
 
-import by.passthrough.research.utils.jsoner.JsonField;
 import by.passthrough.research.utils.jsoner.Jsonable;
-import by.passthrough.research.utils.jsoner.Jsoner;
 
 /**
  * POJO User
  */
 public class User implements Jsonable {
 
-    @JsonField
     private long id;
-
-    @JsonField
     private String nickname;
-
-    @JsonField
     private String nativeName;
-
-    @JsonField
     private String internationalName;
-
-    @JsonField
     private UserStatus userStatus;
 
-    public User() {
-        this.id = -1;
+    public User(long id) {
+        this.id = id;
         this.userStatus = UserStatus.EXIST;
     }
 
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getNickname() {
@@ -69,8 +54,4 @@ public class User implements Jsonable {
         this.userStatus = userStatus;
     }
 
-    @Override
-    public String toString(){
-        return Jsoner.getInstance().toJSONString(this);
-    }
 }

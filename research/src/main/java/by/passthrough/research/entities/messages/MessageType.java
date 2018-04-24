@@ -1,29 +1,21 @@
 package by.passthrough.research.entities.messages;
 
-import java.util.function.Supplier;
-
 public enum MessageType {
-    AUTH(AuthMessage::new),
-    REQUEST(RequestMessage::new),
-    RESPONSE(ResponseMessage::new),
-    CHAT(ChatMessage::new),
-    GROUP(GroupMessage::new),
-    SYSTEM(SystemMessage::new);
+    AUTH(AuthMessage.class),
+    REQUEST(RequestMessage.class),
+    RESPONSE(ResponseMessage.class),
+    CHAT(ChatMessage.class),
+    GROUP(GroupMessage.class),
+    SYSTEM(SystemMessage.class);
 
-    private Supplier<Message> instantiate;
+    private Class appropriateClass;
 
-    public Supplier<Message> getInstantiate() {
-        return instantiate;
+    public <T> Class<T> getAppropriateClass() {
+        return appropriateClass;
     }
 
-    MessageType(Supplier<Message> instantiate){
-        this.instantiate = instantiate;
+    MessageType(Class appropriateClass){
+        this.appropriateClass = appropriateClass;
     }
-
-    @Override
-    public String toString(){
-        return "\"" + name() + "\"";
-    }
-
 
 }

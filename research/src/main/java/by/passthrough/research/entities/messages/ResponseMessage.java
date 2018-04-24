@@ -1,10 +1,7 @@
 package by.passthrough.research.entities.messages;
 
-import by.passthrough.research.utils.jsoner.JsonField;
-
 public class ResponseMessage extends Message {
 
-    @JsonField
     private long id;
 
     public ResponseMessage(){

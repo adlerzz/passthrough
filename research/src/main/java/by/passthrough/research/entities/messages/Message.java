@@ -1,21 +1,13 @@
 package by.passthrough.research.entities.messages;
 
-import by.passthrough.research.utils.jsoner.*;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import by.passthrough.research.utils.jsoner.Jsonable;
+import by.passthrough.research.utils.jsoner.Jsoner;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 
 public abstract class Message implements Jsonable{
-
-    @JsonField
-    protected MessageType messageType;
-
-    @JsonField
-    protected Object payload;
-
-    public Message(){
-
-    }
+    MessageType messageType;
+    Object payload;
 
     public MessageType getMessageType() {
         return messageType;
@@ -35,26 +27,14 @@ public abstract class Message implements Jsonable{
      * @return Message object
      */
     public static Message parseFromJSON(String json){
-        JSONParser jsonParser = new JSONParser();
+        final Jsoner jsoner = Jsoner.getInstance();
         try {
-            JSONObject jsonObject = (JSONObject) jsonParser.parse(json);
-            if(jsonObject.containsKey("messageType")){
-                MessageType type = MessageType.valueOf( (String) jsonObject.get("messageType") );
-                Message message = type.getInstantiate().get();
-                Jsoner.getInstance().fillObject(jsonObject, message);
-                return message;
-            } else {
-                return new SystemMessage("error", "no any message type error");
-            }
-
-        } catch (ParseException e) {
+            JsonObject jsonObject = jsoner.parse(json);
+            MessageType messageType = MessageType.valueOf(jsonObject.get("messageType").getAsString());
+            return jsoner.parse(json, messageType.getAppropriateClass());
+        } catch (JsonSyntaxException e) {
             return new SystemMessage("error", "json parsing error");
         }
-    }
-
-    @Override
-    public String toString(){
-        return Jsoner.getInstance().toJSONString(this);
     }
 
     @Override
@@ -65,6 +45,6 @@ public abstract class Message implements Jsonable{
 
         Message message = (Message) object;
 
-        return message.toString().equals(this.toString());
+        return message.toJSONString().equals(this.toJSONString());
     }
 }

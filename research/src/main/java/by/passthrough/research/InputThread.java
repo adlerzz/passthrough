@@ -17,12 +17,10 @@ public class InputThread extends Thread {
     private PeerTransceiver peerTransceiver;
     private User user;
 
-
     public InputThread(PeerTransceiver peerTransceiver, User user) {
         this.reader = new BufferedReader( new InputStreamReader(System.in));
         this.peerTransceiver = peerTransceiver;
         this.user = user;
-
     }
 
     @Override
@@ -53,37 +51,42 @@ public class InputThread extends Thread {
                     break;
 
                 case "auth":
-                    AuthMessage authMessage = new AuthMessage();
-                    authMessage.setId(user.getId());
-                    authMessage.setUser(user);
+                    AuthMessage authMessage = new AuthMessage(user.getId(), user);
 
                     try {
                         this.peerTransceiver.open();
+                        log.debug("peer connected");
                     } catch (IOException e){
                         log.error(e);
                     }
-                    sendMsg = authMessage.toString();
+                    sendMsg = authMessage.toJSONString();
                     break;
 
                 case "allPeers":
                     RequestMessage requestMessage = new RequestMessage(CommonUtils.getInstance().getNewId(),"peers");
-                    sendMsg = requestMessage.toString();
+                    sendMsg = requestMessage.toJSONString();
                     break;
 
                 case "test":
-                    ChatMessage chatMessage = new ChatMessage();
-                    chatMessage.setSrc( user.getId() );
-                    chatMessage.setDest( Long.valueOf(secondWord) );
-                    chatMessage.setPayload("test message from " + user.getNickname());
-                    sendMsg = chatMessage.toString();
+                    if(secondWord != null) {
+                        long dest = Long.valueOf(secondWord);
+                        String payload = "test message from " + user.getNickname();
+                        ChatMessage chatMessage = new ChatMessage(user.getId(), dest, payload);
+                        sendMsg = chatMessage.toJSONString();
+                    }
                     break;
 
                 case "end":
                     sendMsg = SystemMessage.STOP.toString();
                     break;
 
-                default:
-                    sendMsg = firstWord + " " + secondWord;
+                default: {
+                    if (secondWord == null) {
+                        sendMsg = firstWord;
+                    } else {
+                        sendMsg = firstWord + " " + secondWord;
+                    }
+                }
             }
 
             if(sendMsg != null) {

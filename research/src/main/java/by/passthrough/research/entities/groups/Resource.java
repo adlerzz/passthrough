@@ -1,26 +1,15 @@
 package by.passthrough.research.entities.groups;
 
-import by.passthrough.research.utils.jsoner.JsonField;
-import by.passthrough.research.utils.jsoner.Jsonable;
-import by.passthrough.research.utils.jsoner.Jsoner;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
  * Created by alst0816 on 13.04.2018
  */
-public class Resource implements Jsonable {
-    @JsonField
+public class Resource{
     private String name;
-
-    @JsonField
     private ArrayList<String> units;
-
-    @JsonField
     private ArrayList<String> statuses;
-
-    @JsonField
     private ArrayList<String> values;
 
     public Resource(String name) {
@@ -53,8 +42,4 @@ public class Resource implements Jsonable {
         return values;
     }
 
-    @Override
-    public String toString() {
-        return Jsoner.getInstance().toJSONString(this);
-    }
 }
